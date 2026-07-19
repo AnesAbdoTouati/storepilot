@@ -1,22 +1,33 @@
-import dotenv from "dotenv";
-dotenv.config();
+import "dotenv/config";
+
 import app from "./app.js";
-import sequelize from "./config/db.config.js";
+import { pool } from "./config/db.js";
 
 
 const port = process.env.PORT || 5000;
 
+
 const start = async () => {
+
     try {
-        console.log("DB PASS:", process.env.DB_PASSWORD);
-        await sequelize.authenticate();
-        console.log("Db connected");
+
+        await pool.query("SELECT 1");
+
+        console.log("Database connected");
+
+
         app.listen(port, () => {
-            console.log("Server is Runnig on Port:", port);
-        })
+            console.log(`Server is running on port ${port}`);
+        });
+
+
+    } catch (error) {
+
+        console.error("Database connection failed:", error);
+
     }
-    catch (err) {
-        console.log(err);
-    }
-}
+
+};
+
+
 start();
